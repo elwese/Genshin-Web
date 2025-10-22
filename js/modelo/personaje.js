@@ -93,10 +93,24 @@ class Personaje {
         artefacto_5
     }; 
   }
+
+  cargarPersonajeBase() {
+    //traer de db los datos de personaje cargado
+  
+  }
+
+  cargarPersonajePersonalizadoDB(id_usuario) {
+    //traer de db los personajes personalizados del usuario
+
+  }
+
   guardarEnDB() {
-    // Lógica para guardar el personaje en la base de datos
+    //necesito, 
     
 
   }
+
+  
+
 
 }

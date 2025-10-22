@@ -12,7 +12,8 @@ class Artefacto{
         this.bonos_secundario = bonos_secundario;
     }
 
-    async cargarDatosBase() {
+    // Carga los datos del artefacto base desde la tabla artefacto_base
+    async cargarDatos_ArtefactoBase() {
     return new Promise((resolve, reject) => {
       const consulta = "SELECT * FROM artefacto_base WHERE id_artefacto = ?";
       conexion.query(consulta, [this.id_artefactoBase], (err, resultado) => {
@@ -29,6 +30,18 @@ class Artefacto{
       });
     });
     }
+
+    //Carga la lista de artefactos asociadas al usuario
+  async cargarArtefactosPersonalizadosDB(id_usuario) {
+    return new Promise((resolve, reject) => {
+      const consulta = "SELECT * FROM artefacto_creado WHERE id_usuario = ?";
+      conexion.query(consulta, [id_usuario], (err, resultados) => {
+        if (err) return reject(err);
+        if (resultados.length === 0) return reject("No se encontraron artefactos personalizadas para este usuario");
+        resolve(resultados);
+      });
+    });
+  }
 
     async guardarEnDB() {
   // 1️⃣ Guardar el artefacto creado

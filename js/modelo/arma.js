@@ -11,8 +11,8 @@ class Arma {
     this.bono_secundario_valor = bono_secundario_valor;
   }
 
-  // Carga los datos base desde la tabla arma_base
-  async cargarDatosBase() {
+  // Carga los datos de la arma base desde la tabla arma_base
+  async cargarDatos_ArmaBase() {
     return new Promise((resolve, reject) => {
       const consulta = "SELECT * FROM arma_base WHERE id_arma = ?";
       conexion.query(consulta, [this.id_armaBase], (err, resultado) => {
@@ -28,6 +28,18 @@ class Arma {
         this.archivo_bono = datos.archivo_bono;
 
         resolve(this);
+      });
+    });
+  }
+
+  //Carga la lista de armas asociadas al usuario
+  async cargarArmaPersonalizadaDB(id_usuario) {
+    return new Promise((resolve, reject) => {
+      const consulta = "SELECT * FROM arma_creada WHERE id_usuario = ?";
+      conexion.query(consulta, [id_usuario], (err, resultados) => {
+        if (err) return reject(err);
+        if (resultados.length === 0) return reject("No se encontraron armas personalizadas para este usuario");
+        resolve(resultados);
       });
     });
   }
@@ -49,9 +61,9 @@ class Arma {
 
     conexion.query(consulta, valores, (err, resultado) => {
       if (err) {
-        console.error("❌ Error al guardar arma:", err);
+        console.error("Error al guardar arma:", err);
       } else {
-        console.log("✅ Arma guardada con ID:", resultado.insertId);
+        console.log("Arma guardada con ID:", resultado.insertId);
       }
     });
   }

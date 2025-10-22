@@ -5,8 +5,8 @@ async function app() {
   try {
     const miArma = new Arma(1, 1, 20, 2, 150, 12.5);
     const miArtefacto = new Artefacto(1, 1, 20, "ATQ_P", 150, [{"bono":"VIDA","valor":100},{"bono":"DEF","valor":50}]);
-    await miArma.cargarDatosBase();  // Trae info desde arma_base
-    await miArtefacto.cargarDatosBase();  // Trae info desde artefacto_base
+    await miArma.cargarDatos_ArmaBase();  // Trae info desde arma_base
+    await miArtefacto.cargarDatos_ArtefactoBase();  // Trae info desde artefacto_base
     console.log("Arma cargada:", miArma);
     console.log("Artefacto cargado:", miArtefacto);
 
