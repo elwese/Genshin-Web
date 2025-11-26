@@ -1,0 +1,395 @@
+// -- Main App --
+
+import React, { useState } from 'react';
+import { 
+  Sword, 
+  BookOpen, 
+  Settings, 
+  User, 
+  Search, 
+  Plus, 
+  Edit3, 
+  Trash2, 
+  Shield, 
+  Zap,
+  Menu,
+  ChevronRight,
+  LogOut,
+  Lock
+} from 'lucide-react';
+import './styles/estilos.css';
+import {Home} from './pages/public/Home';
+import {AdminPanel} from './pages/admin/AdminPanel';
+import Navbar from './components/layout/Navbar';
+import AccessDenied from './components/common/AccessDenied';
+import {WikiHome} from './pages/public/Wiki/WikiHome';
+import {CalculatorHome} from './pages/public/Calculator/CalculatorHome';
+
+
+const App = () => {
+  const [currentView, setView] = useState('home');
+  const [userRole, setUserRole] = useState('guest'); 
+
+  const toggleRole = () => {
+    setUserRole(prev => prev === 'admin' ? 'guest' : 'admin');
+    if (currentView === 'admin' && userRole === 'admin') {
+      setView('home');
+    }
+  };
+
+  const renderView = () => {
+    switch(currentView) {
+      case 'home': 
+        return <Home setView={setView} userRole={userRole} toggleRole={toggleRole} />;
+      case 'admin': 
+        return userRole === 'admin' ? <AdminPanel /> : <AccessDenied setView={setView} />;
+      case 'wiki': 
+        return <WikiHome />;
+      case 'calculator': 
+        return <CalculatorHome />;
+      default: 
+        return <Home setView={setView} userRole={userRole} toggleRole={toggleRole} />;
+    }
+  };
+
+  return (
+    <div className="font-sans antialiased select-none">
+      <style>estilos.css</style>
+      {renderView()}
+      <Navbar setView={setView} currentView={currentView} userRole={userRole} />
+    </div>
+  );
+};
+
+export default App;
+
+// -- src/components/common/AccessDenied.jsx --
+import React from 'react'
+import '../../styles/estilos.css';
+
+export const AccessDenied = ({ setView }) => (
+  <div className="app-container flex items-center justify-center text-slate-400 flex-col p-6 text-center">
+    <Shield size={48} className="mb-4 text-red-500" />
+    <h2 className="text-xl font-bold text-white">Acceso Restringido</h2>
+    <p className="text-sm mt-2">No tienes los permisos de Arconte necesarios para ver esta zona.</p>
+    <button 
+      onClick={() => setView('home')}
+      className="mt-6 px-6 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white rounded-full text-sm font-bold transition-colors"
+    >
+      Volver al Inicio
+    </button>
+  </div>
+);
+export default AccessDenied;
+
+// --- src/components/layout/Navbar.jsx ---
+
+import React from 'react'
+import '../../styles/estilos.css'
+import { Menu, Settings, Sword, BookOpen } from 'lucide-react';
+
+export const Navbar = ({ setView, currentView, userRole }) => {
+  const allNavItems = [
+    { id: 'home', label: 'Inicio', icon: <Menu size={20} />, roleRequired: 'guest' },
+    { id: 'wiki', label: 'Wiki', icon: <BookOpen size={20} />, roleRequired: 'guest' },
+    { id: 'calculator', label: 'Calc', icon: <Sword size={20} />, roleRequired: 'guest' }, 
+    { id: 'admin', label: 'Admin', icon: <Settings size={20} />, roleRequired: 'admin' }, 
+  ];
+
+  const visibleItems = allNavItems.filter(item => {
+    if (item.roleRequired === 'guest') return true;
+    if (item.roleRequired === 'admin' && userRole === 'admin') return true;
+    return false;
+  });
+
+  return (
+    <nav className="fixed bottom-0 w-full border-t border-slate-800 pb-2 pt-3 px-6 z-50" style={{ backgroundColor: 'var(--bg-nav)' }}>
+      <div className="flex justify-between items-center max-w-md mx-auto">
+        {visibleItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setView(item.id)}
+            className={`flex flex-col items-center gap-1 transition-colors duration-300 ${
+              currentView === item.id ? 'nav-item-active' : 'nav-item-inactive'
+            }`}
+          >
+            {item.icon}
+            <span className="text-xs font-medium">{item.label}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+};
+export default Navbar;
+
+// --- src/pages/public/Home.jsx ---
+
+import React from 'react'
+import '../../styles/estilos.css';
+import { Sword, BookOpen, ChevronRight, User, Lock, Zap ,Search} from 'lucide-react';
+
+export const Home = ({ setView, userRole, toggleRole }) => {
+  return (
+    <div className="app-container pb-24 px-6 pt-12">
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-bold mb-2 tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-600">
+          TEYVAT
+        </h1>
+        <p className="text-sub uppercase tracking-[0.2em] text-sm mb-4">
+          Calculator & Wiki
+        </p>
+
+        <button 
+          onClick={toggleRole}
+          className="text-xs bg-slate-800 border border-slate-600 px-3 py-1 rounded-full text-sub flex items-center gap-2 mx-auto hover:bg-slate-700 transition"
+        >
+          {userRole === 'admin' ? <Lock size={12} className="text-green-400"/> : <User size={12}/>}
+          Modo actual: <span className={userRole === 'admin' ? "text-green-400 font-bold" : "text-white"}>{userRole.toUpperCase()}</span>
+        </button>
+      </div>
+
+      <div className="grid gap-6 max-w-md mx-auto">
+        {/* Card Calculadora */}
+        <div 
+          onClick={() => setView('calculator')}
+          className="genshin-card relative overflow-hidden group p-6 cursor-pointer shadow-lg"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Sword size={100} />
+          </div>
+          <div className="relative z-10">
+            <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center mb-4 text-gold">
+              <Sword size={24} />
+            </div>
+            <h2 className="text-xl font-bold mb-1">Calculadora de Daño</h2>
+            <p className="text-sm text-sub mb-4">Crea builds, optimiza artefactos y maximiza tu DPS.</p>
+            <span className="text-xs font-bold uppercase tracking-wide text-gold flex items-center gap-1">
+              Acceder <ChevronRight size={14} />
+            </span>
+          </div>
+        </div>
+
+        {/* Card Wiki */}
+        <div 
+          onClick={() => setView('wiki')}
+          className="genshin-card relative overflow-hidden group p-6 cursor-pointer shadow-lg"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <BookOpen size={100} />
+          </div>
+          <div className="relative z-10">
+            <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center mb-4 text-blue-400">
+              <Search size={24} />
+            </div>
+            <h2 className="text-xl font-bold mb-1">Wiki de Teyvat</h2>
+            <p className="text-sm text-sub mb-4">Datos sobre personajes, armas, enemigos y mecánicas.</p>
+            <span className="text-xs font-bold uppercase tracking-wide text-blue-400 flex items-center gap-1">
+              Explorar <ChevronRight size={14} />
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-10 max-w-md mx-auto">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-white">
+          <Zap size={18} className="text-gold" /> Novedades
+        </h3>
+        <div className="space-y-3">
+          {[1, 2].map((i) => (
+            <div key={i} className="flex items-center gap-4 bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+              <div className="w-12 h-12 bg-slate-700 rounded-lg shrink-0"></div>
+              <div>
+                <p className="text-sm font-semibold text-slate-200">Nueva versión 5.0 disponible</p>
+                <p className="text-xs text-sub">Actualización de base de datos</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// --- src/pages/admin/AdminPanel.jsx ---
+
+import React from 'react';
+import '../../styles/estilos.css';
+
+export const AdminPanel = () => {
+  const categories = [
+    { id: 1, name: 'Personajes', count: 72, icon: <User size={20} /> },
+    { id: 2, name: 'Armas', count: 145, icon: <Sword size={20} /> },
+    { id: 3, name: 'Artefactos', count: 34, icon: <Shield size={20} /> },
+    { id: 4, name: 'Enemigos', count: 58, icon: <Zap size={20} /> },
+  ];
+
+  return (
+    <div className="app-container pb-24 px-4 pt-8">
+      <header className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Panel Admin</h1>
+          <p className="text-xs text-sub">Gestión de Base de Datos</p>
+        </div>
+        <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center">
+          <Settings size={20} className="text-slate-300" />
+        </div>
+      </header>
+
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        {categories.map((cat) => (
+          <div key={cat.id} className="genshin-card p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-slate-500">
+            <div className="mb-2 text-sub">{cat.icon}</div>
+            <span className="text-2xl font-bold text-white">{cat.count}</span>
+            <span className="text-xs text-sub uppercase tracking-wide">{cat.name}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-slate-800/50 rounded-2xl border border-slate-800 p-5">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-bold text-slate-200">Últimos Items Agregados</h3>
+          <button className="p-2 rounded-full btn-primary">
+            <Plus size={18} />
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {[
+            { name: "Furina", type: "Personaje", date: "Hace 2h" },
+            { name: "Fulgor de las Aguas", type: "Arma", date: "Hace 5h" },
+          ].map((item, idx) => (
+            <div key={idx} className="flex justify-between items-center py-2 border-b border-slate-700/50 last:border-0">
+              <div>
+                <p className="text-sm font-medium text-slate-200">{item.name}</p>
+                <p className="text-xs text-sub">{item.type} • {item.date}</p>
+              </div>
+              <div className="flex gap-2">
+                <button className="p-2 hover:bg-slate-700 rounded-lg text-sub transition-colors">
+                  <Edit3 size={16} />
+                </button>
+                <button className="p-2 hover:bg-slate-700 rounded-lg text-red-400 transition-colors">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// --- src/pages/public/Calculator/CalculatorHome ---
+
+import React from 'react';
+import '../../../styles/estilos.css';
+import { Sword } from 'lucide-react';
+
+export const CalculatorHome = () => {
+  return (
+    <div className="app-container flex items-center justify-center text-slate-400 flex-col">
+    <Sword size={48} className="mb-4 opacity-50" />
+    <h2 className="text-xl font-bold">Calculadora</h2>
+    <p className="text-sm">Por favor inicia sesión para continuar</p>
+    <button className="mt-4 px-6 py-2 btn-primary rounded-full text-sm font-bold">
+      Login / Registro
+    </button>
+  </div>
+  )
+}
+
+
+
+// --- src/pages/public/Wiki/WikiHome ---
+
+import React from 'react'
+import '../../../styles/estilos.css';
+import { BookOpen } from 'lucide-react';
+
+export const WikiHome = () => {
+  return (
+    <div className="app-container flex items-center justify-center text-slate-400 flex-col">
+    <BookOpen size={48} className="mb-4 opacity-50" />
+    <h2 className="text-xl font-bold">Wiki en construcción</h2>
+    <p className="text-sm">Selecciona una categoría para empezar</p>
+  </div>
+  )
+}
+
+
+// -- estilos.css--
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* ... tus estilos personalizados van debajo ... */
+
+/* --- Variables Globales (Theming) --- */
+:root {
+  --bg-dark: #0f172a;       /* Slate 900 */
+  --bg-card: #1e293b;       /* Slate 800 */
+  --bg-nav: #020617;        /* Slate 950 */
+  
+  --text-main: #f1f5f9;     /* Slate 100 */
+  --text-muted: #94a3b8;    /* Slate 400 */
+  
+  --genshin-gold: #eab308;  /* Yellow 500 */
+  --genshin-gold-dark: #ca8a04; /* Yellow 600 */
+  --genshin-blue: #60a5fa;  /* Blue 400 */
+}
+
+/* --- Clases Reutilizables --- */
+
+/* Contenedor principal de la App */
+.app-container {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+/* Tarjetas estilo Genshin */
+.genshin-card {
+  background-color: var(--bg-card);
+  border: 1px solid #334155; /* Borde sutil */
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.genshin-card:hover {
+  border-color: var(--genshin-gold-dark);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Textos especiales */
+.text-gold {
+  color: var(--genshin-gold);
+}
+
+.text-sub {
+  color: var(--text-muted);
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--genshin-gold-dark);
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #a16207; /* Un tono más oscuro */
+}
+
+/* Navegación */
+.nav-item-active {
+  color: var(--genshin-gold);
+}
+
+.nav-item-inactive {
+  color: var(--text-muted);
+}

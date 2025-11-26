@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+/* --- Integración con Tailwind --- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-dark: #0f172a;       /* Slate 900 */
+  --bg-card: #1e293b;       /* Slate 800 */
+  --bg-nav: rgba(15, 23, 42, 0.9); /* Slate 900 con transparencia */
+  
+  --text-main: #f1f5f9;     /* Slate 100 */
+  --text-muted: #94a3b8;    /* Slate 400 */
+  
+  --genshin-gold: #eab308;  /* Yellow 500 */
+  --genshin-gold-dark: #ca8a04; /* Yellow 600 */
+  --genshin-blue: #60a5fa;  /* Blue 400 */
+  --genshin-purple: #c084fc; /* Purple 400 */
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--bg-dark);
+}
+
+/* Contenedor principal que simula la vista móvil y centra el contenido */
+.app-wrapper {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Tarjetas con efecto hover suave */
+.genshin-card {
+  background-color: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1.25rem; /* Bordes más redondeados estilo iOS/Genshin */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.genshin-card:hover {
+  border-color: var(--genshin-gold-dark);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Botones Principales (Dorados) */
+.btn-primary {
+  background: linear-gradient(135deg, var(--genshin-gold) 0%, var(--genshin-gold-dark) 100%);
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  transition: filter 0.2s;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+/* Navegación Inferior */
+.nav-container {
+  background-color: var(--bg-nav);
+  backdrop-filter: blur(12px); /* Efecto vidrio */
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-item-active {
+  color: var(--genshin-gold);
+}
+
+.nav-item-inactive {
+  color: var(--text-muted);
+}
+
+/* Animaciones de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
