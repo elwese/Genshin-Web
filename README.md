@@ -1,2 +1,2 @@
 # Genshin-Web
-Una aplicacion web para manejo de datos utilizando genshin como medio
+Aplicacion Web-Mobil desarrollada con React y Django con integracion a base de datos.
