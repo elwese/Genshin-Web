@@ -3,14 +3,28 @@ import '../../../styles/estilos.css';
 import { Sword,Plus,Users,Zap,Lock, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { AuthContext } from '../../../components/context/AuthContext.jsx';
+import { useContext } from 'react';
+
+
+
 
 export const CalculatorHome = () => {
   const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  
+    const { auth } = useContext(AuthContext);
 
 
-
-
+const handleClick = () => {
+    if (!auth.isLogged) {
+      // abrir modal
+      setShowLoginModal(true);
+    } else {
+      // navegar
+      navigate("/app/character/hub");
+    }
+  };
   
   
   return(
@@ -75,7 +89,7 @@ export const CalculatorHome = () => {
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button 
-              onClick={() => setShowLoginModal(true)}
+              onClick={() => handleClick()}
               className="genshin-card p-4 flex items-center gap-4 bg-slate-800/50 hover:bg-slate-800 border-dashed border-slate-700 hover:border-solid hover:border-purple-500/50 transition-all group"
             >
               <div className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center text-slate-400 group-hover:text-purple-400">
@@ -83,7 +97,7 @@ export const CalculatorHome = () => {
               </div>
               <div className="text-left">
                 <h4 className="text-slate-200 font-bold text-sm">Personajes Guardados</h4>
-                <p className="text-slate-500 text-[10px]">Requiere inicio de sesión</p>
+                <p className="text-slate-500 text-[10px]"> { !auth.isLogged && "Requiere inicio de sesión"}</p>
               </div>
               <Lock size={16} className="ml-auto text-slate-600" />
             </button>
@@ -105,7 +119,7 @@ export const CalculatorHome = () => {
                 <Lock size={32} />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Acceso a Irminsul</h3>
-              <p className="text-sm text-slate-400 mb-6">Necesitas iniciar sesión.</p>
+              <p className="text-sm text-slate-400 mb-6">   "Necesitas iniciar sesión."</p>
               <button 
                 onClick={() => navigate('/app/account')}
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl text-sm transition-colors"

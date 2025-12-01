@@ -32,6 +32,7 @@ import { AccountHome } from './pages/public/Account/AccountHome.jsx';
 import { AuthProvider } from './components/context/AuthContext.jsx';
 import { CalculatorCharacterMain } from './pages/public/Calculator/Character/CalculatorCharacterMain.jsx';
 import { CalculatorTeamMain } from './pages/public/Calculator/Team/CalculatorTeamMain.jsx';
+import  CharacterHub  from './components/Character/CharacterHub.jsx';
 
 // Placeholder para la vista de Cuenta
 
@@ -90,7 +91,7 @@ const App = () => {
 
 
             <Route path="account" element={<AccountHome />} />
-            
+            <Route path="/app/character/hub" element={<CharacterHub />} />
             <Route 
               path="admin" 
               element={userRole === 'admin' ? <AdminPanel /> : <AccessDenied setView={() => {}} />} 
