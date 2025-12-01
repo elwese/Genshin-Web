@@ -1,4 +1,14 @@
 import React from 'react';
+import { 
+  Sword, 
+  Settings, 
+  User,  
+  Plus, 
+  Edit3, 
+  Trash2, 
+  Shield, 
+  Zap
+} from 'lucide-react';
 import '../../styles/estilos.css';
 
 export const AdminPanel = () => {
